@@ -1,0 +1,19 @@
+<div id="body">
+  <div class="Flexbox">
+    <div><h1>Accedi</h1></div>
+    <div><p><label>Email:</label></p>
+      <input [(ngModel)]="credenziali.email" type="email" name="email" id="email"/></div>
+    <div><p id="pass"><label>Password:</label></p>
+      <input [(ngModel)]="credenziali.password"  type="password" name="password" id="password"/></div>
+    <div class="messaggio-container">
+      <span id="messaggio">{{ messaggio }}</span>
+    </div>
+    <div> <p id="non">Non sei registrato? <a routerLink="/signup">Registrati</a></p></div>
+
+    <div>
+      <button [disabled]="loading" id="tastoAccedi" (click)="login()">Accedi</button>
+      <span *ngIf="loading" class="spinner"></span>
+    </div>
+  </div>
+</div>
+

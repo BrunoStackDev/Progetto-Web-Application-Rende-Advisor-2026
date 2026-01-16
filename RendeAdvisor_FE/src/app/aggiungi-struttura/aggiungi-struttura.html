@@ -1,0 +1,46 @@
+<div id="body">
+  <h1>Aggiungi struttura <img src="../../assets/palazzi.png" width="30px"></h1>
+  <div id="principale">
+    <div id="secondario">
+      <div class="interno nome">
+        <label class="etichette">Nome</label>
+        <textarea [(ngModel)]="attivita.nomeLocale" class="textArea" placeholder="Inserisci nome"></textarea>
+      </div>
+      <div class="interno email">
+        <label class="etichette">Email</label>
+        <textarea [(ngModel)]="attivita.email" class="textArea" placeholder="Inserisci email"></textarea>
+      </div>
+      <div class="interno indirizzo">
+        <label class="etichette">Indirizzo</label>
+        <textarea [(ngModel)]="attivita.indirizzo" class="textArea" placeholder="Inserisci indirizzo"></textarea>
+      </div>
+      <div class="interno telefono">
+        <label class="etichette">Telefono</label>
+        <input [(ngModel)]="attivita.telefono" type="tel" class="textArea" placeholder="Inserisci telefono">
+      </div>
+      <div class="interno descrizione">
+        <label class="etichette">Descrizione</label>
+        <textarea [(ngModel)]="attivita.descrizione" class="textArea boxDescrizione" placeholder="Inserisci descrizione"></textarea>
+      </div>
+      <div id="divRadio">
+        <form>
+          <label class="labelButton" >HOTEL</label>
+          <input type="radio" name="scelta" value="hotel" [(ngModel)]="attivita.tipo">
+          <label class="labelButton" >RISTORANTE</label>
+          <input type="radio" name="scelta" value="ristorante" [(ngModel)]="attivita.tipo">
+        </form>
+      </div>
+    </div>
+    <div id="terzario">
+      <img src="../../assets/MINDUJO.jpg" id="fotoProfilo">
+      <button class="sfoglia annulla">Sfoglia</button>
+      <div class="messaggio-container" class="campo">
+        <span id="messaggio">{{ messaggio }}</span>
+      </div>
+      <span *ngIf="loading" class="spinner"></span>
+    </div>
+
+    <button (click)="salva()" class="button" id="buttonConferma">Conferma</button>
+    <button class="annulla">Annulla</button>
+  </div>
+</div>
