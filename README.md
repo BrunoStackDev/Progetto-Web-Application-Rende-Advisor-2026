@@ -15,5 +15,5 @@ Email: testuser2@gmail.com
 
 Password: 123456
 
-Questo account rappresenta un utente standard.
-Non ha locali associati ed e' pensato per testare le funzionalita' disponibili a un normale utente dell'applicazione.
+Questo account non ha locali associati.
+E' pensato per testare la navigazione e la visualizzazione delle informazioni senza permessi di gestione sui locali presenti.
