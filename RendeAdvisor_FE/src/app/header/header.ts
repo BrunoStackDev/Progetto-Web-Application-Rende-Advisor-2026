@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
 import {UtenteService} from '../service/UtenteService';
+import {AuthService} from '../service/AuthService';
+import {UtenteDto} from '../model/utente.dto';
 
 @Component({
   selector: 'app-header',
@@ -9,25 +11,39 @@ import {UtenteService} from '../service/UtenteService';
   templateUrl: './header.html',
   styleUrls: ['./header.css'],
 })
-export class Header {
+export class Header implements OnInit {
 
-  constructor(private utenteService:UtenteService, private router:Router) {
-  }
+  urlImmagine?: string;
+  utente?: UtenteDto;
+  isLogged = false;
 
-  logged() {
-    console.log("CLICK PROFILO → controllo login");
+  constructor(
+    private utenteService: UtenteService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
-    this.utenteService.isLogged().subscribe({
-      next: () => {
-        console.log("LOGGATO → vado al profilo");
-        this.router.navigate(['/profilo']);
-      },
-      error: () => {
-        console.log("NON LOGGATO → vado a choose");
-        this.router.navigate(['/choose']);
-      }
+  ngOnInit(): void {
+
+    this.authService.user$.subscribe(user => {
+      this.utente = user || undefined;
+      this.isLogged = !!user;
+      this.urlImmagine = this.getImmagine();
     });
   }
 
+  logged() {
+    if (this.isLogged) {
+      this.router.navigate(['/profilo']);
+    } else {
+      this.router.navigate(['/choose']);
+    }
+  }
 
+  getImmagine() {
+    if (this.utente?.immagineBase64) {
+      return "data:image/*;base64," + this.utente.immagineBase64;
+    }
+    return "/assets/user-profile-icon-free-vector.jpeg";
+  }
 }

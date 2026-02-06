@@ -7,6 +7,7 @@ import { ApiResponseDto } from '../model/apiResponse.dto';
 @Injectable({
   providedIn: 'root'
 })
+
 export class RecensioneService {
 
   private BASE_URL = 'http://localhost:8080/api/recensioni';
@@ -16,6 +17,12 @@ export class RecensioneService {
   getByLocale(nomeLocale: string): Observable<ApiResponseDto<RecensioneDto[]>> {
     return this.http.get<ApiResponseDto<RecensioneDto[]>>(
       this.BASE_URL + "/locale/" + nomeLocale
+    );
+  }
+
+  getByUtente(username: string): Observable<ApiResponseDto<RecensioneDto[]>> {
+    return this.http.get<ApiResponseDto<RecensioneDto[]>>(
+      this.BASE_URL + "/utente/" + username
     );
   }
 
@@ -30,6 +37,14 @@ export class RecensioneService {
     const params = {username: username}
     return this.http.get<ApiResponseDto<number>>(
       this.BASE_URL + "/n_rec",
+      { params }
+    );
+  }
+
+  getRatingStruttura(nomeStruttura: string): Observable<ApiResponseDto<number>> {
+    const params = {nomeStruttura: nomeStruttura};
+    return this.http.get<ApiResponseDto<number>>(
+      this.BASE_URL + "/rating",
       { params }
     );
   }

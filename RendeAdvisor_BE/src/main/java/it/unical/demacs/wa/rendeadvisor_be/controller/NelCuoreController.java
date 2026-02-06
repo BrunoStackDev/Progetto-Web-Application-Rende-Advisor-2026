@@ -3,6 +3,8 @@ package it.unical.demacs.wa.rendeadvisor_be.controller;
 import it.unical.demacs.wa.rendeadvisor_be.dao.dbManager.DBManager;
 import it.unical.demacs.wa.rendeadvisor_be.dao.implementazione.NelCuoreDAO;
 import it.unical.demacs.wa.rendeadvisor_be.model.dto.ApiResponse;
+import it.unical.demacs.wa.rendeadvisor_be.model.dto.AttivitaDTO;
+import it.unical.demacs.wa.rendeadvisor_be.model.dto.AttivitaProxy;
 import it.unical.demacs.wa.rendeadvisor_be.model.dto.NelCuoreDTO;
 import it.unical.demacs.wa.rendeadvisor_be.service.NelCuoreService;
 import org.springframework.http.HttpStatus;
@@ -30,8 +32,8 @@ public class NelCuoreController {
         }
     }
 
-    @PostMapping("/salva")
-    public ResponseEntity<ApiResponse<Void>> salva(@RequestBody NelCuoreDTO nelCuoreDTO) {
+    @PostMapping("/aggiungi")
+    public ResponseEntity<ApiResponse<Void>> aggiungi(@RequestBody NelCuoreDTO nelCuoreDTO) {
         try {
             boolean ok = nelCuoreService.aggiungiPreferito(nelCuoreDTO);
 
@@ -92,15 +94,29 @@ public class NelCuoreController {
 
 
     @GetMapping("/lista")
-    public ResponseEntity<ApiResponse<List<String>>> lista(@RequestParam String nomeUtente) {
+    public ResponseEntity<ApiResponse<List<AttivitaDTO>>> lista(@RequestParam String nomeUtente) {
         try {
-            List<String> lista = nelCuoreService.listaPreferiti(nomeUtente);
+            List<AttivitaDTO> lista = nelCuoreService.listaPreferiti(nomeUtente);
 
             return ResponseEntity.ok(
                     new ApiResponse<>(true, "Lista preferiti inviata", lista)
             );
 
         } catch (SQLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(false, "Errore interno al server", null));
+        }
+    }
+
+    @GetMapping("/count-preferiti")
+    public ResponseEntity<ApiResponse<Integer>> countPreferiti(@RequestParam String nomeStruttura) {
+        try {
+            Integer count = nelCuoreService.countPreferitiLocale(nomeStruttura);
+
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ApiResponse<>(true, "Preferito count", count)
+            );
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ApiResponse<>(false, "Errore interno al server", null));
         }

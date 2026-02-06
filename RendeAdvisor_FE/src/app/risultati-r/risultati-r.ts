@@ -8,7 +8,7 @@ import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-risultati-r',
-  imports: [RouterLink, CommonModule],
+  imports: [CommonModule],
   templateUrl: './risultati-r.html',
   styleUrl: './risultati-r.css',
 })
@@ -34,12 +34,6 @@ export class RisultatiR implements OnInit {
     });
   }
 
-
-  getStarsArray(n: number): number[] {
-    return Array(n);
-  }
-
-
   performSearch() {
     this.loading = true;
     this.error = '';
@@ -58,10 +52,18 @@ export class RisultatiR implements OnInit {
   }
 
   viewDetails(nomeLocale: string) {
-    this.router.navigate(['/dettaglio', nomeLocale]);
+    this.router.navigate(['/profilo-struttura', encodeURIComponent(nomeLocale)]);
   }
 
-  goBack() {
-    this.router.navigate(['/']);
+  aggiungiRecensione(nomeLocale: string) {
+    this.router.navigate(['/aggiungi-r', encodeURIComponent(nomeLocale)])
+
+  }
+
+  getImmagine(attivita: AttivitaDto) {
+    if(attivita?.immagineBase64){
+      return "data:image/*;base64," + attivita.immagineBase64;
+    }
+    return "/assets/strutturaDefault.png"
   }
 }

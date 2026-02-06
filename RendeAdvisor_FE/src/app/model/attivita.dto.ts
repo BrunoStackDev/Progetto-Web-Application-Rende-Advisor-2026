@@ -2,7 +2,6 @@ import {RecensioneDto} from './recensione.dto';
 
 
 export interface AttivitaDto {
-
   nomeLocale:string;
   proprietario:string;
   telefono:string;
@@ -10,7 +9,9 @@ export interface AttivitaDto {
   descrizione:string;
   indirizzo:string;
   tipo:string;
-  immagine?:string
+  immagineBase64?:string;
+  latitudine?: number;
+  longitudine?: number;
 
   recensioni?: RecensioneDto[];
 }

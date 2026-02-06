@@ -13,6 +13,14 @@ import { Archive } from './archive/archive';
 import { RisultatiR } from './risultati-r/risultati-r';
 import {ProfiloStrutturaComponent} from './profilo-struttura/profilo-struttura';
 import {ProfiloUtente} from './profilo-utente/profilo-utente';
+import { NelCuore } from './nel-cuore/nel-cuore';
+import {AggiungiR} from './aggiungi-r/aggiungi-r';
+import {RecensioniStruttura} from './recensioni-struttura/recensioni-struttura';
+import { RispostePage } from './risposte-page/risposte-page';
+import {StruttureUtente} from './strutture-utente/strutture-utente';
+import {ModificaProfiloStruttura} from './modifica-profilo-struttura/modifica-profilo-struttura';
+import { MieRecensioni } from './mie-recensioni/mie-recensioni';
+
 
 
 
@@ -23,11 +31,21 @@ export const routes: Routes = [
     component: HomePage,
   },
   {
-    title: 'Profilo | RendeAdvisor',
-    path: 'profilo-struttura',
-    component: ProfiloStrutturaComponent
+    title: 'Recensioni struttura',
+    path: 'recensioni-struttura/:nomeStruttura',
+    component: RecensioniStruttura
   },
 
+  {
+    path:  'aggiungi-r/:nomeLocale',
+    component: AggiungiR
+  },
+
+  {
+    title: 'Profilo Struttura | RendeAdvisor',
+    path: 'profilo-struttura/:nomeLocale',
+    component: ProfiloStrutturaComponent
+  },
   {
     title: 'Cucina & Sapori | RendeAdvisor',
     path: 'restaurants',
@@ -35,7 +53,8 @@ export const routes: Routes = [
   },
   {title: 'Risultati | RendeAdvisor',
    path: 'RisultatiR',
-  component: RisultatiR},
+  component: RisultatiR
+  },
   {
     title: 'Il Tuo Soggiorno | RendeAdvisor',
     path: 'hotels',
@@ -71,6 +90,12 @@ export const routes: Routes = [
     path: 'modify',
     component: ModificaProfiloUtente
   },
+
+  {
+    title: 'Le mie Recensioni | RendeAdvisor',
+    path: 'mie-recensioni',
+    component: MieRecensioni
+  },
   {
     title: 'Cosa vuoi fare? | RendeAdvisor',
     path: 'choose',
@@ -87,13 +112,34 @@ export const routes: Routes = [
     component: ProfiloUtente
   },
   {
+    title: 'I Tuoi Preferiti | RendeAdvisor',
+    path: 'nel-cuore',
+    component: NelCuore
+  },
+  {
+    title: 'Modifica la tua Struttura | RendeAdvisor',
+    path: "modifica-struttura/:struttura",
+    component: ModificaProfiloStruttura
+  },
+  {
     path: '',
     redirectTo: '',
     pathMatch: 'full'
   },
   {
+    title: 'Strutture utente | RendeAdvisor',
+    path: 'strutture-utente',
+    component: StruttureUtente
+  },
+
+
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'recensioni/:nomeStruttura', component: RecensioniStruttura },
+  { path: 'risposte-page', component: RispostePage },
+  {
     title: 'Oops! Something goes wrong',
     path: '**',
     component: HomePage
-  }
+  },
+
 ];

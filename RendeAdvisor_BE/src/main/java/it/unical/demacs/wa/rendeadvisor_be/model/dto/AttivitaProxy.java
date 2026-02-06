@@ -8,14 +8,14 @@ import java.util.List;
 
 public class AttivitaProxy extends AttivitaDTO {
 
-    RecensioneDAO recensioneDAO;
+    private final RecensioneDAO recensioneDAO;
 
-    public AttivitaProxy() throws SQLException {
-        recensioneDAO = new RecensioneDAO(DBManager.getInstance().getConnection());
+    public AttivitaProxy(RecensioneDAO recensioneDAO) throws SQLException {
+        this.recensioneDAO = recensioneDAO;
     }
 
     @Override
-    public List<RecensioneDTO> getRecensioni() throws SQLException{
+    public List<RecensioneDTO> getRecensioni(){
         List<RecensioneDTO> recensioni = super.getRecensioni();
         if(recensioni==null){
             super.setRecensioni(recensioneDAO.findByLocale(super.getNomeLocale()));

@@ -10,6 +10,8 @@ public interface IAttivitaDAO {
 
     boolean insertAttivita(AttivitaDTO attivita) throws SQLException;
 
+    AttivitaDTO findByNome(String nome) throws SQLException;
+
     // Cerca un'attività per nome
     AttivitaDTO findByPrimaryKey(String nomeLocale) throws SQLException;
 
@@ -20,11 +22,12 @@ public interface IAttivitaDAO {
     ArrayList<AttivitaDTO> findByTipo(String tipo) throws SQLException;
 
     //Aggiorna i dati (descrizione, foto, ecc.)
-    boolean updateAttivita(AttivitaDTO attivita) throws SQLException;
+    boolean updateAttivita(AttivitaDTO attivita, String vecchioNome) throws SQLException;
 
     //Rimuove un'attività dal sistema
     boolean delete(String nomeLocale) throws SQLException;
 
     List<AttivitaDTO> search(String query) throws SQLException;
 
+    List<AttivitaDTO> listaAttivitaByProprietario(String username) throws SQLException;
 }

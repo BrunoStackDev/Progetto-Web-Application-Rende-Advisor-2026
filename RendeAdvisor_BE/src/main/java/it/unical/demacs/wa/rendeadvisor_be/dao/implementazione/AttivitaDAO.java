@@ -24,8 +24,8 @@ public class AttivitaDAO implements IAttivitaDAO {
 
     @Override
     public boolean insertAttivita(AttivitaDTO attivita) throws SQLException {
-        String query = "INSERT INTO attivita(nomelocale, proprietario, telefono, email,  immagine, descrizione, indirizzo, tipo)" +
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO attivita(nomelocale, proprietario, telefono, email,  immagine, descrizione, indirizzo, tipo, latitudine, longitudine)" +
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         PreparedStatement ps = connection.prepareStatement(query);
         ps.setString(1, attivita.getNomeLocale());
@@ -36,9 +36,35 @@ public class AttivitaDAO implements IAttivitaDAO {
         ps.setString(6, attivita.getDescrizione());
         ps.setString(7, attivita.getIndirizzo());
         ps.setString(8, attivita.getTipo());
+        if (attivita.getLatitudine() != null)
+            ps.setDouble(9, attivita.getLatitudine());
+        else
+            ps.setNull(9, java.sql.Types.DOUBLE);
+
+        if (attivita.getLongitudine() != null)
+            ps.setDouble(10, attivita.getLongitudine());
+        else
+            ps.setNull(10, java.sql.Types.DOUBLE);
+
 
         return ps.executeUpdate() == 1;
     }
+
+    @Override
+    public AttivitaDTO findByNome(String nome) throws SQLException {
+        String sql = "SELECT * FROM attivita WHERE nomelocale = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, nome);
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            return mapResultSetToDTO(rs);
+        }
+
+        return null;
+    }
+
 
     @Override
     public AttivitaDTO findByPrimaryKey(String nomeLocale) throws SQLException {
@@ -48,8 +74,9 @@ public class AttivitaDAO implements IAttivitaDAO {
         ps.setString(1, nomeLocale);
 
         ResultSet rs = ps.executeQuery();
-        AttivitaDTO attivitaDTO = null;
+        AttivitaDTO attivita = null;
         if (rs.next()) {
+            attivita = new AttivitaDTO();
 
             String nome = rs.getString("nomelocale");
             String proprietario = rs.getString("proprietario");
@@ -59,14 +86,23 @@ public class AttivitaDAO implements IAttivitaDAO {
             String descrizione = rs.getString("descrizione");
             String indirizzo = rs.getString("indirizzo");
             String tipo = rs.getString("tipo");
+            double latitudine = rs.getDouble("latitudine");
+            double longitudine = rs.getDouble("longitudine");
 
-            attivitaDTO = new AttivitaDTO(nome, proprietario, telefono, email, immagine, descrizione, indirizzo, tipo);
-            RecensioneDAO recensioneDAO = new RecensioneDAO(DBManager.getInstance().getConnection());
-            List<RecensioneDTO> recensioni = recensioneDAO.findByLocale(nome);
-            attivitaDTO.setRecensioni(recensioni);
+            attivita.setNomeLocale(nomeLocale);
+            attivita.setProprietario(proprietario);
+            attivita.setTelefono(telefono);
+            attivita.setEmail(email);
+            attivita.setImmagine(immagine);
+            attivita.setDescrizione(descrizione);
+            attivita.setIndirizzo(indirizzo);
+            attivita.setTipo(tipo);
+            attivita.setLatitudine(latitudine);
+            attivita.setLongitudine(longitudine);
+
         }
 
-        return attivitaDTO;
+        return attivita;
     }
 
     @Override
@@ -77,7 +113,7 @@ public class AttivitaDAO implements IAttivitaDAO {
 
         ArrayList<AttivitaDTO> listaAttivita = new ArrayList<>();
         while (rs.next()) {
-            AttivitaProxy attivitaDTO = new AttivitaProxy();
+            AttivitaDTO attivitaDTO = new AttivitaDTO();
             attivitaDTO.setNomeLocale(rs.getString("nomelocale"));
             attivitaDTO.setProprietario(rs.getString("proprietario"));
             attivitaDTO.setTelefono(rs.getString("telefono"));
@@ -86,6 +122,8 @@ public class AttivitaDAO implements IAttivitaDAO {
             attivitaDTO.setDescrizione(rs.getString("descrizione"));
             attivitaDTO.setIndirizzo(rs.getString("indirizzo"));
             attivitaDTO.setTipo(rs.getString("tipo"));
+            attivitaDTO.setLatitudine(rs.getDouble("latitudine"));
+            attivitaDTO.setLongitudine(rs.getDouble("longitudine"));
 
             listaAttivita.add(attivitaDTO);
         }
@@ -102,7 +140,7 @@ public class AttivitaDAO implements IAttivitaDAO {
         ResultSet rs = ps.executeQuery();
         ArrayList<AttivitaDTO> listaAttivitaByTipo = new ArrayList<>();
         while (rs.next()) {
-            AttivitaProxy attivitaDTO = new AttivitaProxy();
+            AttivitaDTO attivitaDTO = new AttivitaDTO();
             attivitaDTO.setNomeLocale(rs.getString("nomelocale"));
             attivitaDTO.setProprietario(rs.getString("proprietario"));
             attivitaDTO.setTelefono(rs.getString("telefono"));
@@ -111,6 +149,8 @@ public class AttivitaDAO implements IAttivitaDAO {
             attivitaDTO.setDescrizione(rs.getString("descrizione"));
             attivitaDTO.setIndirizzo(rs.getString("indirizzo"));
             attivitaDTO.setTipo(rs.getString("tipo"));
+            attivitaDTO.setLatitudine(rs.getDouble("latitudine"));
+            attivitaDTO.setLongitudine(rs.getDouble("longitudine"));
 
             listaAttivitaByTipo.add(attivitaDTO);
         }
@@ -119,16 +159,19 @@ public class AttivitaDAO implements IAttivitaDAO {
     }
 
     @Override
-    public boolean updateAttivita(AttivitaDTO attivita) throws SQLException {
-        String query = "UPDATE attivita SET telefono=?,email=?,immagine=?,descrizione=?,indirizzo=?,tipo=? WHERE nomelocale = ?";
+    public boolean updateAttivita(AttivitaDTO attivita, String vecchioNome) throws SQLException {
+        String query = "UPDATE attivita SET nomelocale=?, telefono=?,email=?,immagine=?,descrizione=?,indirizzo=?, latitudine=?, longitudine=? WHERE nomelocale = ?";
         PreparedStatement ps = connection.prepareStatement(query);
-        ps.setString(1, attivita.getTelefono());
-        ps.setString(2, attivita.getEmail());
-        ps.setBytes(3, attivita.getImmagine());
-        ps.setString(4, attivita.getDescrizione());
-        ps.setString(5, attivita.getIndirizzo());
-        ps.setString(6, attivita.getTipo());
-        ps.setString(7, attivita.getNomeLocale());
+        ps.setString(1, attivita.getNomeLocale());
+        ps.setString(2, attivita.getTelefono());
+        ps.setString(3, attivita.getEmail());
+        ps.setBytes(4, attivita.getImmagine());
+        ps.setString(5, attivita.getDescrizione());
+        ps.setString(6, attivita.getIndirizzo());
+        ps.setDouble(7, attivita.getLatitudine());
+        ps.setDouble(8, attivita.getLongitudine());
+        ps.setString(9, vecchioNome);
+
 
         return ps.executeUpdate() == 1;
     }
@@ -146,12 +189,9 @@ public class AttivitaDAO implements IAttivitaDAO {
     @Override
     public List<AttivitaDTO> search(String query) throws SQLException {
 
-        String sql = """ 
-        SELECT * FROM attivita WHERE nome = ? """;
-
+        String sql = "SELECT * FROM attivita WHERE LOWER(nomelocale) LIKE ?";
         PreparedStatement ps = connection.prepareStatement(sql);
-
-        ps.setString(1, query);
+        ps.setString(1, "%" + query.toLowerCase() + "%");
 
         ResultSet rs = ps.executeQuery();
 
@@ -171,13 +211,37 @@ public class AttivitaDAO implements IAttivitaDAO {
         dto.setProprietario(rs.getString("proprietario"));
         dto.setTelefono(rs.getString("telefono"));
         dto.setEmail(rs.getString("email"));
-        dto.setImmagine(rs.getString("immagine").getBytes());
-
+        dto.setImmagine(rs.getBytes("immagine"));
+        dto.setImmagine(rs.getBytes("immagine"));
         dto.setDescrizione(rs.getString("descrizione"));
         dto.setIndirizzo(rs.getString("indirizzo"));
         dto.setTipo(rs.getString("tipo"));
+        dto.setLatitudine(rs.getDouble("latitudine"));
+        dto.setLongitudine(rs.getDouble("longitudine"));
 
         return dto;
+    }
+
+    public List<AttivitaDTO> listaAttivitaByProprietario(String username) throws SQLException {
+        String query = "SELECT nomelocale,indirizzo,tipo,immagine FROM attivita WHERE proprietario=?";
+
+        try(PreparedStatement ps = connection.prepareStatement(query);){
+            ps.setString(1, username);
+
+            ResultSet rs = ps.executeQuery();
+            List<AttivitaDTO> attivita = new ArrayList<>();
+            while(rs.next()){
+                AttivitaDTO dto = new AttivitaDTO();
+                dto.setNomeLocale(rs.getString("nomelocale"));
+                dto.setIndirizzo(rs.getString("indirizzo"));
+                dto.setImmagine(rs.getBytes("immagine"));
+                dto.setTipo(rs.getString("tipo"));
+
+                attivita.add(dto);
+            }
+
+            return attivita;
+        }
     }
 
 }

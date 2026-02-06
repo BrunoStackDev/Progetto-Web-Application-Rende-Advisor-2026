@@ -1,32 +1,31 @@
-<div id="body">
-  <div class="card-recensione">
-    <div class="nRec">0</div>
+<div class="container-cards">
+  <div *ngFor="let r of listaRecensioni" class="card-recensione">
 
     <div class="recensione">
-
       <div class="header">
 
         <div class="utente">
-          <img class="logoUtente" src="../../assets/willy-crak.jpg" alt="logo">
-          <span class="nome">Nome</span>
+          <img class="logoUtente" [src]="getImmagine(r)" alt="user">
+          <span class="nome">{{ r.nomeUtente }}</span>
         </div>
 
         <div class="info-row">
           <div class="rating-section">
-            <span class="rating">5</span>
-            <img class="stelle" src="../../assets/star.png" alt="stelle">
+            <span class="rating">{{ r.valutazione }}</span>
+            <img class="stelle" src="assets/star.png" alt="stelle">
           </div>
 
-          <span class="rispondi">Rispondi</span>
+          <span class="rispondi" (click)="vaiARisposte(r)" style="cursor: pointer; color: blue; text-decoration: underline;">
+            {{ isProprietario ? 'Rispondi' : 'Leggi risposte' }}
+          </span>
         </div>
 
       </div>
 
       <div class="text-section">
-        <span class="testo">Testo della recensione...</span>
+        <span class="testo">{{ r.testo }}</span>
       </div>
-
     </div>
+
   </div>
 </div>
-

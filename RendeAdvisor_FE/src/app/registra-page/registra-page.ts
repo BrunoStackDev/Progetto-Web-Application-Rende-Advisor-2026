@@ -7,7 +7,7 @@ import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-registra-page',
-  imports: [FormsModule, NgIf],
+  imports: [FormsModule, NgIf, RouterLink],
   templateUrl: './registra-page.html',
   styleUrls: ['./registra-page.css'],
 })
@@ -36,7 +36,7 @@ export class RegistraPage {
             this.router.navigate(['/login']);
           },
           error: (err) => {
-            this.messaggio = "Errore nella registrazione!"
+            this.messaggio = err.error.message;
             this.loading = false;
           }
         });

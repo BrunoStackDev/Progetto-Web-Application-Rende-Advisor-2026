@@ -1,10 +1,32 @@
 <div id="body">
-  <h1>Nel cuore<img src="../../assets/Cuore pieno.png" width="50px"></h1>
+  <h1>Nel cuore <img src="assets/Cuore pieno.png" width="50px"></h1>
+
   <div id="principale">
-    <h2 style="margin-bottom: 5px;">Ehi, ancora non hai nulla nei preferiti!<img src="../../assets/CuoreRotto.png" width="30px" id="cuoreRotto"></h2>
-    <h3 style="text-align: center; margin-top: 0px;" >Clicca il cuore che trovi all'interno del profilo di ogni struttura per cominciare<br>
-      a salvare le tue preferite in questa pagina.
-    </h3>
-    <img src="../../assets/sadMan.jpg" width="500px" id="sadMan">
+    <div *ngIf="loading" class="spinner">Caricamento...</div>
+
+    <div id="griglia-preferiti" *ngIf="!loading && listaPreferiti.length > 0">
+
+      <div class="card-preferito" *ngFor="let struttura of listaPreferiti" (click)="vaiAlProfilo(struttura.nomeLocale)">
+        <img [src]="getImmagine(struttura)" class="card-img" alt="locale">
+
+        <div class="card-content">
+          <h3>{{ struttura.nomeLocale }}</h3>
+
+          <button class="btn-remove" (click)="confermaRimozione($event, struttura.nomeLocale)">
+            Rimuovi
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <ng-container *ngIf="!loading && listaPreferiti.length === 0">
+      <h2 style="margin-bottom: 5px;">Ehi, ancora non hai nulla nei preferiti! <img src="../../assets/CuoreRotto.png" width="30px" id="cuoreRotto"></h2>
+      <h3 style="text-align: center; margin-top: 0;">
+        Clicca il cuore che trovi all'interno del profilo di ogni struttura per cominciare<br>
+        a salvare le tue preferite in questa pagina.
+      </h3>
+      <img src="/assets/sadMan.jpg" width="500px" id="sadMan">
+    </ng-container>
   </div>
 </div>

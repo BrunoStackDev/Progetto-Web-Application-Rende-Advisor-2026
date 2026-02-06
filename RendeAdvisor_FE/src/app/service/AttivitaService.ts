@@ -11,6 +11,7 @@ import {ApiResponseDto} from '../model/apiResponse.dto';
 
 export class AttivitaService {
 
+
   private BASE_URL = 'http://localhost:8080/api/attivita';
 
   constructor(private http: HttpClient) {}
@@ -31,12 +32,30 @@ export class AttivitaService {
     return this.http.get<ApiResponseDto<AttivitaDto>>(this.BASE_URL + "/dettaglio/" + nomeLocale);
   }
 
-  salva(attivita: AttivitaDto): Observable<ApiResponseDto<void>> {
+  salva(attivita: FormData): Observable<ApiResponseDto<void>> {
     return this.http.post<ApiResponseDto<void>>(this.BASE_URL + "/salva", attivita);
   }
 
   search(query: string): Observable<ApiResponseDto<AttivitaDto[]>> {
     const params = new HttpParams().set('query', query);
     return this.http.get<ApiResponseDto<AttivitaDto[]>>(this.BASE_URL + "/search", {params});
+  }
+
+  getByNome(nome: string): Observable<ApiResponseDto<AttivitaDto>> {
+    return this.http.get<ApiResponseDto<AttivitaDto>>( this.BASE_URL + "/by-nome",
+      { params: { nome } }
+    );
+  }
+
+  getByProprietario(username: string): Observable<ApiResponseDto<AttivitaDto[]>>{
+    return this.http.get<ApiResponseDto<AttivitaDto[]>>(this.BASE_URL + "/by-proprietario", { params: {username: username} })
+  }
+
+  modificaProfilo(formData: FormData) {
+    return this.http.post<ApiResponseDto<void>>(this.BASE_URL + "/modifica/salva", formData);
+  }
+
+  getVicini() {
+    return this.http.get<ApiResponseDto<AttivitaDto[]>>(this.BASE_URL + "/vicini");
   }
 }

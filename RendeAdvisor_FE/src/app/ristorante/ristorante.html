@@ -4,8 +4,8 @@
   </div>
 
   <div class="search-container">
-    <div><input type="search" placeholder="Cerca Ristorante" [(ngModel)]="searchText" id="searchBar" (keyup.enter)="search()" /></div>
-    <div><input type="button" value="Ricerca" id="ricercaButton" (click)="search()" /></div>
+    <input type="search" placeholder="Cerca Ristorante" [(ngModel)]="searchText" id="searchBar" (keyup.enter)="search()" />
+    <input type="button" value="Ricerca" id="ricercaButton" (click)="search()" />
     <div id="searchDropdown" class="search-dropdown"></div>
   </div>
 
@@ -14,8 +14,12 @@
   </div>
 
   <div class="Flexbox4">
-    <div><img src ="prova restaurant 2.jpg" id="ristoranti1"/></div>
-    <div><img src ="prova restaurant 2.jpg" id="ristoranti2"/></div>
-    <div><img src ="prova restaurant 2.jpg" id="ristoranti3"/></div>
+    <div *ngFor="let r of listaRistoranti" (click)="vaiAlProfilo(r)">
+      <img [src]="getImmagine(r)"
+           [alt]="r.nomeLocale"
+           class="hotel-img" />
+      <p>{{ r.nomeLocale }}</p>
+    </div>
   </div>
+
 </div>
